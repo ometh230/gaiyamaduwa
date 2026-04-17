@@ -1,0 +1,31 @@
+name: WhatsApp Bot (Safe 24/7)
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"   (backup restart)
+  workflow_dispatch:        
+
+jobs:
+  run-whatsapp-bot:
+    runs-on: ubuntu-latest
+
+    concurrency:
+      group: whatsapp-bot-runner
+      cancel-in-progress: true 
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run WhatsApp bot
+        run: |
+          echo "Starting WhatsApp bot..."
+          timeout 360m npm start
