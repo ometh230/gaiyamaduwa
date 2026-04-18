@@ -28,4 +28,4 @@ jobs:
       - name: Run WhatsApp bot
         run: |
           echo "Starting WhatsApp bot..."
-          timeout 360m npm start
+          timeout 350m npm start
