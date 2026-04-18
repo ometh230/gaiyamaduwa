@@ -1,31 +1,33 @@
-
+name: Node.js CI/CD Workflow
 
 on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
   schedule:
-    - cron: "0 */6 * * *"   (backup restart)
-  workflow_dispatch:        
+    - cron: '0 0 * * *' # දිනපතා UTC වේලාවෙන් මධ්‍යම රාත්‍රී 12:00 ට ක්‍රියාත්මක වේ
 
 jobs:
-  run-whatsapp-bot:
+  build:
     runs-on: ubuntu-latest
-
-    concurrency:
-      group: whatsapp-bot-runner
-      cancel-in-progress: true 
-
+    strategy:
+      matrix:
+        node-version: [20.x]
+ 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: "20"
+          node-version: ${{ matrix.node-version }}
 
       - name: Install dependencies
         run: npm install
 
-      - name: Run WhatsApp bot
-        run: |
-          echo "Starting WhatsApp bot..."
-          timeout 350m npm start
+      - name: Start application
+        run: npm start
